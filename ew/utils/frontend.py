@@ -329,8 +329,9 @@ async def send_message(client, channel, text = None, embed = None, delete_after 
 
 
 async def send_response(response_text, cmd = None, delete_after = None, name = None, channel = None, format_name = True, format_ats = True, allow_everyone = False):
-    user_data = EwUser(member=cmd.message.author)
-    user_mutations = user_data.get_mutations()
+    if cmd != None:
+        user_data = EwUser(member=cmd.message.author)
+        user_mutations = user_data.get_mutations()
 
     if cmd == None and channel == None:
         raise Exception("No channel to send message to")
