@@ -9,6 +9,10 @@ class EwMenuItem:
     def __repr__(self):
         return(f"<EwMenuItem - {self.display_name}>")
 
+
+    def modified_price(price_multiplier):
+        return price * price_multiplier  
+
 class EwVendor:
     def __init__(self, vendor_id, display_name, poi):
         self.vendor_id = vendor_id
@@ -16,6 +20,9 @@ class EwVendor:
         self.poi = poi
         self.menu = {}
         self.lookup_names = {}
+
+    def __repr__(self):
+        return(f"<EwVendor - {self.vendor_id} - {self.display_name}>") 
 
     def add_item(self, _menu_obj):
         #check type for error
@@ -66,7 +73,9 @@ class EwVendor:
         self.lookup_names = {}
 
     """ Return menu of vendor """
-    def menu_print(self):
+    #TODO: add price multiplier feature
+    #TODO: make code block a diff type that shows green or red if you can afford or not
+    def menu_print(self, price_multiplier):
         # Bold text store name
         menu_str = f"**{self.display_name}:**\n"
         
