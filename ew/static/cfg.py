@@ -355,6 +355,8 @@ poi_id_northwest_outskirts_depths = "northwestoutskirtsdepths"
 poi_id_north_outskirts_depths = "northoutskirtsdepths"
 poi_id_nuclear_beach_depths = "nuclearbeachdepths"
 
+
+poi_id_capnalexyachtshack = 'capnalexyachtshack'
 # The Sphere
 poi_id_thesphere = "thesphere"
 

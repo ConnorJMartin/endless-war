@@ -43,3 +43,6 @@ buildfactionmap.sh
 minefile.csv
 apifile.txt
 minefile.txt
+ew/cmd/debug_dummy/debugcmds.py
+ew/cmd/debug_dummy/debugcmds.py
+/ew/cmd/debug_dummy
