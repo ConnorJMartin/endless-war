@@ -498,6 +498,7 @@ create table records(
     PRIMARY KEY(id_server, record_type)
 );
 
+
 CREATE TABLE blurbs(
     id_blurb BIGINT NOT NULL AUTO_INCREMENT,
     id_server BIGINT NOT NULL DEFAULT -1,
@@ -517,6 +518,7 @@ CREATE TABLE votes(
     target VARCHAR(50) NOT NULL DEFAULT '',
     PRIMARY KEY(id_user, id_server)
 );
+
 
 CREATE TABLE goonscape_stats (
 
@@ -563,6 +565,39 @@ CREATE TABLE quest_records (
 
 	PRIMARY KEY (time_stamp, id_user, id_server, record_type)
 
+);
+
+
+CREATE TABLE yachts(
+    name_yacht varchar(64) NOT NULL,
+    thread_id bigint NOT NULL DEFAULT -1,
+    id_user BIGINT NOT NULL DEFAULT  -1,
+    id_server BIGINT NOT NULL DEFAULT  -1,
+    flood DECIMAL(9, 2) NOT NULL DEFAULT 0.0,
+    filth DECIMAL(9, 2) NOT NULL DEFAULT 0.0,
+    helm BIGINT NOT NULL DEFAULT  -1,
+    cannon BIGINT NOT NULL DEFAULT  -1,
+    storehouse BIGINT NOT NULL DEFAULT  -1,
+    poopdeck BIGINT NOT NULL DEFAULT  -1,
+    x_coord INT NOT NULL DEFAULT  27,
+    y_coord INT NOT NULL DEFAULT  12,
+    speed INT NOT NULL DEFAULT  0,
+    direction VARCHAR(32) NOT NULL DEFAULT '',
+    slimes BIGINT NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (thread_id, id_server)
+);
+
+
+CREATE TABLE yacht_stats(
+    thread_id bigint NOT NULL,
+    id_stat BIGINT NOT NULL AUTO_INCREMENT,
+    type_stat VARCHAR(25) NOT NULL DEFAULT  '',
+    id_server BIGINT NOT NULL DEFAULT  -1,
+    target BIGINT NOT NULL DEFAULT  -1,
+    quantity BIGINT NOT NULL DEFAULT  -1,
+
+	PRIMARY KEY(id_stat)
 );
 
 
