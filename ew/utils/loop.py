@@ -1279,12 +1279,12 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
             ewutils.logMsg(kingpin_role + " just received %d" % total_slimegain + " slime for their captured districts.")
 
     # Decay capture points.
-    for id_district in poi_static.capturable_districts:
-        district = EwDistrict(id_server=id_server, district=id_district)
+    # for id_district in poi_static.capturable_districts:
+    #     district = EwDistrict(id_server=id_server, district=id_district)
 
-        responses = district.decay_capture_points()
-        resp_cont_decay_loop.add_response_container(responses)
-        district.persist()
+    #     responses = district.decay_capture_points()
+    #     resp_cont_decay_loop.add_response_container(responses)
+    #     district.persist()
 
     return await resp_cont_decay_loop.post()
 
