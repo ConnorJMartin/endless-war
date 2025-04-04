@@ -248,14 +248,16 @@ async def decaySlimes(id_server = None):
                 # User will gain slime while in a blockparty/rad storm
                 if user_data.poi in slimeboost_pois:
                     slimes_to_decay -= ewcfg.blockparty_slimebonus_per_tick
-
-                if slimes_to_decay >= 1:
-                    user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_decay)
-                    user_data.persist()
-                    total_decayed += slimes_to_decay
-                elif slimes_to_decay < 1:
-                    user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_blockparty)
-                    user_data.persist()
+                # caps passive slime decay at 5 megaslime
+                # will probably almost always decay slightly below 5 million anyway but no more thereafter
+                if user_data.slimes >= 5000000:
+                    if slimes_to_decay >= 1:
+                        user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_decay)
+                        user_data.persist()
+                        total_decayed += slimes_to_decay
+                    elif slimes_to_decay < 1:
+                        user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_blockparty)
+                        user_data.persist()
 
             cursor.execute("SELECT district FROM districts WHERE id_server = %s AND {slimes} > 1".format(
                 slimes=ewcfg.col_district_slimes
