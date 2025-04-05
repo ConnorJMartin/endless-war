@@ -32,6 +32,7 @@ DEBUG_OPTIONS = {
     'verbose_burn': False,
     'alternate_talk':False,
     'transport': False,
+    'threadson': False,
     'playoffline': False,
     'slimegainchecker':False,
     'trackapi':False
@@ -690,7 +691,9 @@ def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
     return current_time_expirpvp
 
 
-def channel_name_is_poi(channel_name):
+def channel_name_is_poi(channel_name,channel = None):
+    if channel is not None:
+        return channel_name in poi_static.chname_to_poi or channel.type not in [discord.ChannelType.text, discord.ChannelType.private]
     """ Returns true if the specified name is used by any POI. -thats not what this does """
     if channel_name:
         return channel_name in poi_static.chname_to_poi

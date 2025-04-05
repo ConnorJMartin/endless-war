@@ -1232,6 +1232,11 @@ apartment_classes = [*apartment_class_map.keys()]
 
 soulprice = 500000000
 
+
+yachtprice = 100#0000000000000
+
+
+
 tv_set_slime = 5000000
 tv_set_level = 100
 
@@ -1435,6 +1440,29 @@ cmd_talk = cmd_prefix + 'talk'
 
 cmd_clean_stats = cmd_prefix + 'cleanstats'
 
+#YACHTS
+cmd_avast = cmd_prefix + 'avast'
+cmd_setsail = cmd_prefix + 'sail'
+cmd_setsail_alt1 = cmd_prefix + 'setsail'
+cmd_rentyacht = cmd_prefix + 'rentyacht'
+cmd_lock_boat = cmd_prefix + 'lockboat'
+cmd_lock_boat_alt = cmd_prefix + 'unlockboat'
+cmd_cut_rope = cmd_prefix + 'cutrope'
+cmd_quickthread = cmd_prefix + 'quickthread'
+cmd_board = cmd_prefix + 'board'
+cmd_man = cmd_prefix + 'man'
+cmd_unboard = cmd_prefix + 'unboard'
+cmd_stock_ammo = cmd_prefix + 'stock'
+cmd_loadcannon = cmd_prefix + 'load'
+cmd_firecannon = cmd_prefix + 'fire'
+cmd_aimship = cmd_prefix + 'aimship'
+cmd_gangplank = cmd_prefix + 'gangplank'
+cmd_seanet = cmd_prefix + 'seanet'
+cmd_swab = cmd_prefix + 'swab'
+cmd_scoop = cmd_prefix + 'scoop'
+cmd_fixship = cmd_prefix + 'repair'
+
+
 
 offline_cmds = [
     cmd_move,
@@ -1490,7 +1518,8 @@ client_debug_commands =[
  '!massgenslimeoidnames',
  '!decaytick',
 '!moverelics',
-'!quickrevive']
+'!quickrevive',
+'!threado']
 
 # Maximum amount of slime juveniles can have before being killable
 # max_safe_slime = 100000
@@ -1707,6 +1736,8 @@ enemy_attack_tick_length = 5
 # how often to burn
 burn_tick_length = 4
 
+boat_tick_length = 7
+
 # how often to check for statuses to be removed
 removestatus_tick_length = 5
 
@@ -1736,6 +1767,11 @@ cr_unlawful_stunting = 1
 
 
 crime_status = {
+-1000:"{they} are a one man police force.",
+-100:"{they} have contributed towards the peace and prosperity of this city.",
+-20:"{they} have done their fair share of volunteer work at slimeoid shelters, nursing wounded slimeoids back to health.",
+-5:"{they} have helped more than a few grandmas cross the street. Some say {they} don't even snatch their purses.",
+-1:"{they} must be confused, you're supposed to commit gang violence not undo it.",
 0:"{their} record is spotless.",
 1:"{they} have stepped over the line to vaguely uncouth behavior, but {they}'re still the pussy {they}'ve always been.",
 5:"{they} appear to be trying to appear \"hard\". Oh, how {they} have failed.",
@@ -2581,6 +2617,29 @@ col_id_user_pranker = 'id_user_pranker'
 col_id_user_pranked = 'id_user_pranked'
 col_prank_count = 'prank_count'
 
+
+#Yachts
+col_id_yacht = 'id_yacht'
+col_name_yacht = 'name_yacht'
+col_thread_id = "thread_id" #Identifier for the thread's name
+col_flood = "flood" #Percentage of water the yacht is taking
+col_filth = "filth" #Level of filth the boat currently holds
+col_helm = "helm" #Player manning the helm
+col_cannon = "cannon" #Player manning the arms and belowdeck
+col_storehouse = "storehouse" #Player manning the storehouse
+col_poopdeck = "poopdeck" #Player currently manning the poopdeck
+col_xcoord = "x_coord"
+col_ycoord = "y_coord"
+col_direction = 'direction'
+
+
+col_id_stat = "id_stat" #ID of the yacht stat
+col_quantity = "quantity" #amount of stat
+col_type_stat = "type_stat"
+col_id_idstat = "id_stat"
+
+
+
 # Item type names
 it_item = "item"
 it_medal = "medal"
@@ -2776,7 +2835,7 @@ stat_combatknife_kills = 'combat_knife_kills'
 stat_machete_kills = 'machete_kills'
 stat_boomerang_kills = 'boomerang_kills'
 stat_basket_kills = 'basket_kills'
-
+stat_scar_kills = 'scar_kills'
 
 private_stat_string = "'gambit', 'credence', 'credenceused'" #added into a query elsewhere to prevent stats from showing in certain places
 
@@ -2837,7 +2896,7 @@ cause_poison = 16
 cause_crushing = 17
 cause_gay = 18
 cause_debris = 19
-
+cause_shipsink = 20
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
     stat_slimesmined,
@@ -2970,11 +3029,11 @@ amy_curator_dialogue = {
     "cheatedfish":"\"Oh, it's you. I guess I respect the hustle, but if you cheat you're out of the fish donating game. Can't accecpt this one.\"",
     "caughtcheatfish":"\"This {fish}? It's fake. It's a goddamn counterfeit fish. Get out of here with this bullshit.\"",
     "fishdonate":"Amy approvingly nods her head at your {}. Looks like we got a winner! Amy tags the new fish, then dips headfirst into the fishtank to retrieve the old one. A few minutes later she emerges with it, slam dunking the majestic creature into the trash.\"Whoa nelly. I think we gotta clean these tanks better.\"\n\nYou got {} slime!",
-    "redonaterelic":"\"We have *a* version of this in the museum. Either you stole this real one earlier or this is fake. But either way I'm probably won't get to display this relic for long. No deal.\"",
+    "redonaterelic":"\"We have *a* version of this in the museum. Either you stole this real one earlier or this is fake. But either way I probably won't get to display this relic for long. No deal.\"",
     "donaterelic":"Amy looks the artifact over. \"A {}, huh? This is probably the real one, so I'll pay you to get the chance to study it.\" She walks into the backroom, casually tossing {:,} slime your way. You wait for her to carefully examine it, write up a plaque, and get all the fangirling out of her system when nobody's looking, before she comes back to set up the museum display. She also hands you a meticulously constructed replica for your trouble.\n\n \"Ugh. Swap the real one for the fake all you want. It's not like we can hold you off forever.\" While she isn't looking, you do just that.",
     "spoons":"\"You're tearing me apart, Lisa! Nah, but seriously. Don't donate the spoon picture again.\"",
     "artnametaken":"\"Somebody else chose that name. Just add an underscore or a 2 to the end, it'll be fine.\"",
-    "colon":"\"If you put a colon in the frame like that it won't hag on the wall right. Better take that out first.",
+    "colon":"\"If you put a colon in the frame like that it won't hang on the wall right. Better take that out first.",
     "deviantpost":'"I posted it to DeviantSPLAAART. May the algoorithm have mercy on its soul."',
     "notitleart":"\"It's gonna need a title. DeviantSPLAAART won't let me post it without one.\" "
 }
@@ -3975,6 +4034,7 @@ status_hogtied_id = "hogtied"
 
 status_pheromones_id = "pheromones"
 status_dueling = "dueling"
+status_perfume_id = "perfume"
 
 time_expire_burn = 12
 time_expire_high = 30 * 60  # 30 minutes
@@ -4074,6 +4134,12 @@ help_responses = {
     "burying": "**Burying** is a mechanic that allows one to store an item within a location secretly, only retrievable through a password linked to the item.\n\nTo put an item in the ground, you first must !equip a **shovel**, sold at Atomic Forest Stockpile in the Ooze Gardens Farms. Once equipped, you can **!bury [coordinates] [item]**. The coordinates can be any string you enter, and will be saved with no spaces, punctuation, or case. For example, entering \"!bury DustTrap poudrin\" while in Cratersville will result in a slime poudrin being buried in Cratersville with the coordinates \"DUSTTRAP\". Once you bury an item, the message sent by ENDLESS WAR indicating the correct coordinates of the item will disappear after a short time. Make sure you write the coordinates elsewhere, as **once buried, an item cannot be recovered without the correct coordinates**.\n\nTo **!unearth** an item, simply go to the location it was buried in and type **!unearth [coordinates]**. You do **not need a shovel** to !unearth buried items, just the location and coordinates. Be aware anyone can !unearth buried items, not just the player who buried them, and so this can be utilized as if a sort of dead drop. Finally, if multiple items are buried in the same location with the same coordinates, you must !unearth [coordinates] multiple times to unearth all of the items.\n\nHappy burying!", 
     "stats": "Within ENDLESS WAR, **Stats** are a mechanic that allow the player to showcase their skill in specific areas. You can gain XP through your actions in-game, and you'll level-up as you accrue more and more XP. There are currently 4 stats: mining, farming, fishing, and feasting. To check your stats, use **!stats**. To check now-unobtainable stats, or to check all stats, use **!stats hidden** or **!stats all** respectively. Keep in mind, stats currently have **no effect**, and a player with Level 99 mining will function identical to a player with Level 1 mining. \n\nStat List:\n**MINING** - Mining XP is gained through !mining within mines, with the amount of XP gained being based on the amount of slime mined. \n**FARMING** - Farming XP is gained through !reaping mature crops, with the amount of XP gained being based on both number of crops gained and amount of slime gained. \n**FISHING** - Fishing XP is gained through !reeling up fish or items, with the amount of XP gained being based upon the rarity of the !reel. \n**FEASTING** - Feasting XP is gained through !eating or !ordering food, with the amount of XP gained being based upon the hunger restoration of the food.",
     "collections": "**Collections** are furniture items that can store other items within them. You can buy different types of collections at the Museum: **scalp collections** that can hold scalps, **large aquariums** that can hold fish, **soul cylinders** that can hold souls, **weapon chests** that can hold weapons, **portable greenhouses** that can hold crops, and **general collections** that can hold anything. Specialized collections can store **50** of a specific type of item, and have **unique flavor text upon '!inspect'ing**. General collections can store **10** of any non-collection item and do not unique flavor text. Placing a collection in your apartment will give it its own named line in '!look' text.\n\nOnce you have a collection, while in your apartment, you can **'!collect <collection> <item>'** to store an item in the collection. If you have the mutation **Packrat**, you can !collect into any collection in your inventory while outside your apartment. To remove an item from a collection, go to the Bazaar, and you can **'!extract <collection> <item>'** for **100,000 slime** (greenhouses only cost **1,000 slime**). You can rename collections while in your apartment with **'!renamecollection <collection> [name]'**. Once a collection is placed, you can **'!inspect <collection>'** to view its contents and any accompanying flavor text or information. General collections will have an italicized name on upon '!look', as to distinguish that they do not have any accompanying flavor text or information. Finally, with **'!contents <collection>'**, you can view a collection as if it were a community chest.",
+        # Sailing
+    "boats": "**Boats** can be used to explore the islands off the coast of NLACakaNM. You can rent a yacht (!rentyacht) from Alexander Smitty at Smitty's Yacht Shack (!goto ys). Once the transaction is made your yacht can be found and !board-ed at Slime's End Pier.",
+    "sailing": "To **Sail** you need a captain to !man the helm of your ship. From the helm you can !sail in all five cardinal directions; north, south, west, east and stop. You can surveil your surroundings at sea with !avast which will display up the surrounding tiles.",
+    "islands": "**Islands** can be found throughout the Slime Sea and come in all shapes and sizes and sailed to on boats of exactly one shape and size. Once an island is reached you can !unboard your vessel and start exploring. Be cautious though, you never know what you might find.",
+    "battling": "**Sailing is** is a sport where two teams of players compete to get the ball into the opposing team's goal to score points. A game of Slimeball is started when a player does !slimeball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !slimeball to see your data, the ball's location and the score. To move around the field, use !slimeballgo [coordinates]. You can kick the ball by running into it. To stop, use !slimeballstop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !slimeballleave, or join a different game. A game of Slimeball ends when no players are left.",
+    
     # Misc.
     "slimeball": "**Slimeball** is a sport where two teams of players compete to get the ball into the opposing team's goal to score points. A game of Slimeball is started when a player does !slimeball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !slimeball to see your data, the ball's location and the score. To move around the field, use !slimeballgo [coordinates]. You can kick the ball by running into it. To stop, use !slimeballstop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !slimeballleave, or join a different game. A game of Slimeball ends when no players are left.",
     "relics": "**Relics** are one-of-a-kind items hidden all over the city. You can !donate them to the museum in Ooze Gardens for a big slime payout and some additional information about that part of the city. The Curator is pretty airheaded though, so he won't notice if you swipe them back. Long story, he makes replicas, you get the idea. If you are killed with a relic, it gets passed to your killer. Also, hoarding too many might result in graverobbers creeping down your back stair. Be careful, now!",
@@ -4176,6 +4242,7 @@ help_response_group_map = {
     "Slimegain" : ["Mining", "Scavenging", "Farming", "Fishing", "Hunting"],
     "Gang Violence": ["Gangs", "Ghosts", "Capturing", "Scouting", "Wanted", "Sparring", "Bleeding", "Offline"],
     "World": ["Subzones", "Transportation", "Weather", "Realestate", "Apartments", "Collections", "Casino", "Dojo"],
+    "Sailing": ["Boats","Sailing","Islands","Battling"],
     "Other": ["Mymutations", "Relics", "Stocks", "Trading", "Burying", "Stats", "Zines", "Manuscripts", "Sprays", "Slimeball", "Blurbs"],
 }
 

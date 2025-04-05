@@ -18,7 +18,7 @@ from ew.utils.transport import EwTransport, get_transports_at_stop
 
 async def embark(cmd):
     # can only use movement commands in location channels
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
     user_data = EwUser(member=cmd.message.author)
@@ -78,7 +78,7 @@ async def embark(cmd):
             if transport_data.current_line == transport_line.id_line:
                 ticket = None
 
-                if ewcfg.dh_active and ewcfg.dh_stage >= 1:
+                if ewcfg.dh_active and ewcfg.dh_stage >= 100:
                     user_data = EwUser(member = cmd.message.author)
                     if user_data.poi in [ewcfg.poi_id_dt_subway_station, ewcfg.poi_id_rr_subway_station, ewcfg.poi_id_jr_subway_station]:
                         if transport_line.id_line in [ewcfg.transport_line_subway_white_eastbound, ewcfg.transport_line_subway_white_westbound]:
@@ -137,7 +137,7 @@ async def embark(cmd):
 
 async def disembark(cmd):
     # can only use movement commands in location channels
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -254,7 +254,7 @@ async def disembark(cmd):
 
 
 async def check_schedule(cmd):
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)

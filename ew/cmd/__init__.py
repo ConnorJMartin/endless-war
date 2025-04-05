@@ -33,7 +33,7 @@ from . import spooky
 from . import sports
 from . import transport
 from . import wep
-
+from . import yachts
 from . import prank
 try:
     from ew.cmd import debugr
@@ -79,7 +79,8 @@ cmd_modules = [
     sports,
     debugr,
     prank,
-    dungeons
+    dungeons,
+    yachts
 ]
 
 cmd_map = {

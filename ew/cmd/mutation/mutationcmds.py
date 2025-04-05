@@ -362,7 +362,7 @@ async def bleedout(cmd):
         poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(id_server=cmd.message.guild.id, district=poi.id_poi)
         user_data.change_slimes(n=-user_data.bleed_storage, source=ewcfg.source_bleeding)
-        district_data.change_slimes(n=user_data.bleed_storage, source=ewcfg.source_bleeding)
+        district_data.change_slimes(n=user_data.bleed_storage, source=ewcfg.source_bleeding, poi_name=user_data.poi)
         user_data.bleed_storage = 0
         user_data.persist()
         district_data.persist()
@@ -708,7 +708,7 @@ async def skullbash(cmd):
 
 
 async def slap(cmd):
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
     time_now = int(time.time())
@@ -1008,7 +1008,7 @@ async def change_rotation_stat(cmd):
     year = int(today.year)
     if not cmd.message.author.guild_permissions.administrator:
         return
-    if cmd.tokens_count != 3:
+    if cmd.tokens_count <= 2:
         response = "You failed to fuck with everything. Try !changerotation <stat> <value>"
     else:
         if 'future' in cmd.tokens:

@@ -2826,8 +2826,10 @@ poi_list = [
         str_desc="Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.\n\nThis area continues to the Crest of the Crescent Moon.",
         channel="the-moon",
         permissions={'the-moon': ['read', 'send', 'connect']},
-        property_class="C",  # Moon capping eventually I prommy
+        property_class="S",  # Moon capping eventually I prommy
+        pvp=True,
         is_district=True,
+        is_capturable=True,
         neighbors={'crestofthecrescentmoon': 20},
         topic="The moon. Pretty self-explanatory. It's permanently shaped like a crescent due to a quirky mishap.",
     ),
@@ -3466,7 +3468,7 @@ streets = []
 tutorial_pois = []
 zine_mother_districts = []
 enemy_lock_districts = []
-
+docks = []
 for poi in poi_list:
 
     # Assign permissions for all locations in the poi list.
@@ -3564,7 +3566,9 @@ for poi in poi_list:
 
     if poi.is_pier:
         piers.append(poi.id_poi)
-
+    
+    if poi.is_dock:
+        docks.append(poi.id_poi)
     if poi.is_outskirts:
         outskirts.append(poi.id_poi)
         # For spawning purposes. Rarer enemies will spawn more often in the father layers of the 18 outskirts.

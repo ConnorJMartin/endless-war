@@ -58,8 +58,10 @@ import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
 import ew.utils.combat as combat_utils
 import ew.utils.cosmeticitem as cosmetic_utils
+import ew.utils.market as market_utils
 import ew.utils.dungeons as dungeon_utils
 import ew.utils.frontend as fe_utils
+import ew.utils.yacht as yacht_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
 import ew.utils.loop as loop_utils
@@ -70,6 +72,7 @@ import ew.utils.sports as sports_utils
 import ew.utils.transport as transport_utils
 import ew.utils.weather as bknd_weather
 import ew.utils.mutations as mut_utils
+import ew.static.mutations as static_mut
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.user import add_xp
@@ -282,7 +285,7 @@ async def on_ready():
             resp_cont = dist.change_ownership(new_owner=dist.controlling_faction, actor="init", client=client)
             dist.persist()
             await resp_cont.post()
-
+        yacht_utils.load_boats_to_poi(id_server=server.id)
         asyncio.ensure_future(loop_utils.capture_tick_loop(id_server=server.id))
 
         asyncio.ensure_future(loop_utils.bleed_tick_loop(id_server=server.id))
@@ -465,8 +468,15 @@ async def debugHandling(message, cmd, cmd_obj):
     if cmd == (ewcfg.cmd_prefix + 'enemytick'):
         x = await bknd_leaderboard.make_freshness_top_board(server = cmd_obj.guild.id)
         print(x)
+        await market_utils.refresh_bazaar(id_server=cmd_obj.guild.id)
 
 
+    elif cmd == (ewcfg.cmd_prefix + 'threado'):
+        td = await cmd_obj.guild.fetch_channel(1108553243929358467)
+        members = await td.fetch_members()
+        print(members)
+        #td = cmd_obj.guild.get_channel(1108553243929358467)
+        #print(td.members)
     elif cmd == (ewcfg.cmd_prefix + 'quickrevive'):
         print("Created {} Joined {}".format(message.author.created_at.timestamp(), message.author.joined_at.timestamp()))
         """if cmd.mentions_count == 1 and cmd.tokens_count == 3:
@@ -969,10 +979,10 @@ async def on_message(message):
     ########## THREAD CUTOFF ##########
     ------------------------------- """
 
-    # Never treat a message like a command if it's in a thread
-    if message.channel.type not in [discord.ChannelType.text, discord.ChannelType.private]:
-        return
-
+    # Never treat a message like a command if it's in a thread (unless its one of the good ones)
+    if message.channel.type not in [discord.ChannelType.text, discord.ChannelType.private] and not ewutils.DEBUG_OPTIONS.get('threadson'):
+        if message.channel.owner.id != client.user.id:
+            return
     if message.content.startswith(ewcfg.cmd_prefix) or message.content in ewdebug.debug_content_check or message.guild is None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom", "outside-the-lunchroooom"]:
         """
             Wake up if we need to respond to messages. If it's in a basic channel, Could be:
@@ -1008,7 +1018,14 @@ async def on_message(message):
         else:
             guild_used = message.guild
             admin_permissions = message.author.guild_permissions.administrator
-
+        if usermodel.poi[:5] == 'yacht': #corrective measure inside a different thread in case
+            if message.channel.type not in [discord.ChannelType.text, discord.ChannelType.private] and int(usermodel.poi[5:]) != message.channel.id:
+                seachannel = fe_utils.get_channel(guild_used, 'slime-sea')
+                if message.channel.parent.id == seachannel.id:
+                    try:
+                        await message.channel.remove_user(message.author)
+                    except:
+                        ewutils.logMsg("Failed to remove thread perms.")
         # Create command object
         cmd_obj = cmd_utils.EwCmd(
             tokens=tokens,

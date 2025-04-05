@@ -201,7 +201,7 @@ async def attack(cmd):
                 to_district = ctn.slimes_damage/4
 
         # nosferatu gives attacker 60% of splatter
-        if to_district > 0 and (ewcfg.mutation_id_nosferatu in attacker_mutations or ewcfg.dh_stage >= 1) and (20 <= market_data.clock or market_data.clock < 6):
+        if to_district > 0 and (ewcfg.mutation_id_nosferatu in attacker_mutations or ewcfg.dh_stage >= 4) and (20 <= market_data.clock or market_data.clock < 6):
             to_attacker += to_district * 0.6
             to_district *= 0.4
 
@@ -261,7 +261,7 @@ async def attack(cmd):
             sewer_data.persist()  # this is the ONLY exception to "persist everything at the end" (aside from kingpin) because it is SOLELY used here
 
         if to_district > 0:
-            district_data.change_slimes(n=int(to_district), source=ewcfg.source_killing)
+            district_data.change_slimes(n=int(to_district), source=ewcfg.source_killing, poi_name=attacker.poi)
 
         """ Misc. Value Changes & Stat Changes"""
 
@@ -757,7 +757,7 @@ async def suicide(cmd):
     resp_cont = EwResponseContainer(id_server=cmd.guild.id)
 
     # Only allowed in the combat zone.
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
     else:
         # Get the user data.

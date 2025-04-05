@@ -16,7 +16,7 @@ import ew.static.food as static_food
 import ew.static.items as static_items
 import ew.static.weapons as static_weapons
 from ew.utils import core as ewutils
-
+from ew.utils import yacht as ewyacht
 try:
     from ew.cmd import debug as ewdebug
 except:
@@ -328,7 +328,8 @@ async def refresh_bazaar(id_server = None):
     for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
         if item in static_items.item_names:
             bazaar_general_items.append(item)
-
+            if item != 'treasuremap':
+                bazaar_general_items.append(item)
         elif item in static_food.food_names:
             bazaar_foods.append(item)
 
@@ -346,9 +347,10 @@ async def refresh_bazaar(id_server = None):
             bazaar_relics.append(item)
 
     # print(bazaar_general_items)
-    if (ewdebug.bazaarTurnout() == 1) and (len(bazaar_relics) > 0):
+    if (ewdebug.bazaarTurnout() == 1) and (len(bazaar_relics) > 0) and not ewutils.DEBUG:
         market_data.bazaar_wares['relic1'] = random.choice(bazaar_relics)
-
+    elif ewyacht.get_slimesea_item(id_server=id_server, treasuremap=True) != None and (random.randint(0, 4) == 0 or ewutils.DEBUG):
+        market_data.bazaar_wares['relic1'] = 'treasuremap'
     market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
     # Don't add repeated foods
     bw_food2 = None

@@ -19,6 +19,7 @@ from . import cosmeticitem as cosmetic_utils
 from . import move as move_utils
 from . import leaderboard as leaderboard_utils
 from . import weather as weather_utils
+import ew.utils.yacht as yacht_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from . import mutations as mut_utils
@@ -249,7 +250,7 @@ async def decaySlimes(id_server = None):
                 if user_data.poi in slimeboost_pois:
                     slimes_to_decay -= ewcfg.blockparty_slimebonus_per_tick
                 # caps passive slime decay at 5 megaslime
-                # will probably almost always decay slightly below 5 million anyway but no more thereafter
+                # will almost always decay slightly below 5 million anyway but no more thereafter
                 if user_data.slimes >= 5000000:
                     if slimes_to_decay >= 1:
                         user_data.change_slimes(n=-slimes_to_decay, source=ewcfg.source_decay)
@@ -401,7 +402,7 @@ async def bleedSlimes(id_server):
                 user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
 
                 district_data = EwDistrict(id_server=id_server, district=user_data.poi)
-                district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
+                district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding, poi_name=user_data.poi)
                 district_data.persist()
 
                 if user_data.slimes < 0:
@@ -1166,7 +1167,7 @@ async def capture_tick(id_server):
 
                     else:  # if the district isn't already controlled by the player's faction and the capture isn't halted by an enemy
                         faction_capture = player_faction
-                        player_capture_speed = 4
+                        player_capture_speed = 1
                         if ewcfg.mutation_id_lonewolf in mutations and len(gangsters_in_district) == 1:
                             player_capture_speed *= 2
                         #if ewcfg.mutation_id_patriot in mutations:
@@ -1283,7 +1284,6 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
     # Decay capture points.
     # for id_district in poi_static.capturable_districts:
     #     district = EwDistrict(id_server=id_server, district=id_district)
-
     #     responses = district.decay_capture_points()
     #     resp_cont_decay_loop.add_response_container(responses)
     #     district.persist()
@@ -1436,6 +1436,9 @@ async def clock_tick_loop(id_server, force_active = False):
                     ewutils.logMsg('Regulating Slime Sea items...')
                     number = itm_utils.cull_slime_sea(id_server=id_server)
                     ewutils.logMsg('...Slime Sea culled. {} items deleted.'.format(number))
+                    number = 0
+                    #number = itm_utils.cull_slime_sea(id_server=id_server)
+                    ewutils.logMsg('...Slime Sea culled. {} items deleted.'.format(number))
 
                 elif market_data.clock == 20 or force_active:
                     response = ' The SlimeCorp Stock Exchange has closed for the night.'
@@ -1446,3 +1449,14 @@ async def clock_tick_loop(id_server, force_active = False):
         except Exception as e:
             traceback.print_exc(file=sys.stdout)
             ewutils.logMsg('An error occurred in the scheduled slime market update task: {}. Fix that.'.format(e))
+
+
+
+async def boat_tick_loop(id_server):
+    interval = ewcfg.boat_tick_length
+    # Loops for boat movement
+    tick_count = 1
+    while not ewutils.TERMINATE:
+        await asyncio.sleep(interval)
+        tick_count = (tick_count + 1) % 2
+        await yacht_utils.boat_tick(id_server=id_server, tick_count = tick_count)

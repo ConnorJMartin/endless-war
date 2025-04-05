@@ -58,7 +58,7 @@ async def retire(cmd = None, isGoto = False, movecurrent = None):
 
     if owner_user:
         return await usekey(cmd, owner_user)
-    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name):
+    if cmd.message.guild is None or not ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
     elif apt_data.rent == 0:
         response = "You don't *have* an apartment, dumbass."

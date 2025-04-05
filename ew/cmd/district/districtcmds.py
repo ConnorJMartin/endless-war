@@ -28,7 +28,7 @@ async def capture_progress(cmd):
     response = ""
 
     poi = poi_static.id_to_poi.get(user_data.poi)
-    response += "**{}**: ".format(poi.str_name)
+    response += "**{}**: ".format(poi.str_name.format(boat_name = "Yachts"))
 
     if not user_data.poi in poi_static.capturable_districts:
         response += "This zone cannot be captured."
@@ -109,7 +109,7 @@ async def ufo_observe(cmd):
         response = "The ship is grounded. Can't see much from here."
     elif cmd.tokens_count <= 1:
         response = "Observe what?"
-    elif not ewcfg.dh_active or ewcfg.dh_stage != 300:
+    elif not ewcfg.dh_active or ewcfg.dh_stage != 30:
         response = "Wait, your alien espionage is waaaay out of season."
     else:
         poi_seek = ewutils.flattenTokenListToString(cmd.tokens[1:])

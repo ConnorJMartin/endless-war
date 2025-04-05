@@ -18,6 +18,7 @@ from ew.backend.status import EwStatusEffect
 from ew.backend.worldevent import EwWorldEvent
 from ew.backend.mutation import EwMutation
 from ew.backend.dungeons import EwGamestate
+from ew.backend.yacht import EwYacht
 from ew.backend.questrecords import fetch_quest_records
 
 from ew.utils.transport import EwTransport
@@ -66,9 +67,11 @@ from ..wep import wepcmds as wep_cmds
 try:
     from ..debug import debug24
     from ew.static import rstatic as relic_static
+    from ew.cmd import debug as ewdebug
 except:
     from ..debug_dummy import debug24
     from ew.static import rstatic_dummy as relic_static
+    from ew.cmd import debug_dummy as ewdebug
 
 """ show player's slime score """
 
@@ -147,6 +150,7 @@ async def score(cmd: cmd_utils.EwCmd):
 
 
 async def data(cmd):
+    #todo make !data checking other players correct threads relative to the specific channel they're used in
     member = None
     response = ""
 
@@ -259,6 +263,19 @@ async def data(cmd):
         response = "You are a LV{} {}{}.\n".format(user_data.slimelevel, race_prefix, title)
 
         poi = poi_static.id_to_poi.get(user_data.poi)
+        
+        shipname = ""
+        if user_data.poi[:5] == 'yacht':
+            ship = EwYacht(id_server=user_data.id_server, id_thread=int(user_data.poi[5:]))
+            shipname = ship.yacht_name
+            thread = await ship.get_thread()
+            members = thread.fetch_members()
+            if user_data.id_user not in [member.id for member in members]:
+                try:
+                    await thread.add_user(cmd.message.author)
+                except:
+                    ewutils.logMsg("Failed to refresh thread.")
+
 
         if user_data.hunger > 0:
             hungerblock = "You are {}% hungry. ".format(
@@ -268,7 +285,7 @@ async def data(cmd):
             hungerblock = ""
 
         if poi != None:
-            response += "You find yourself {} {}. {}\n".format(poi.str_in, poi.str_name, hungerblock)
+                       response += "You find yourself {} {}. {}\n".format(poi.str_in, poi.str_name.format(boat_name = shipname), hungerblock)
 
 
 
@@ -898,7 +915,22 @@ async def toss_off_cliff(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
-    if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
+    if user_data.poi[:5] == 'yacht':
+        yacht = EwYacht(id_thread=int(user_data.poi[5:]), id_server=user_data.id_server)
+        if ewdebug.seamap[yacht.ycoord][yacht.xcoord] < 0:
+            destination = "slimesea_{}_{}".format(yacht.xcoord, yacht.ycoord)
+            return await ewitem.itemcmds.discard(cmd=cmd, special_dest=destination)
+        else:
+            exit_poi = None
+            for dock in poi_static.docks:
+                dock_obj = poi_static.id_to_poi.get(dock)
+                for coord in dock_obj.coord:
+                    if coord[0] == yacht.xcoord and coord[1] == yacht.ycoord:
+                        exit_poi = dock
+            if exit_poi is not None:
+                return await ewitem.itemcmds.discard(cmd=cmd, special_dest=exit_poi)
+    elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
+
         if item_sought:
             if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
                 if ewutils.global_brick_counter > 60:
@@ -1795,8 +1827,7 @@ async def help(cmd):
     # checks if user is in a college or if they have a game guide
     gameguide = bknd_item.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
 
-    # if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
-    if True:
+    if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
         if not len(cmd.tokens) > 1:
             # list off help topics to player at college
             response = "(Use !help [topic] to learn about a topic. Example: \"!help basics\")\n\nWhat would you like to learn about? Topics include: \n"

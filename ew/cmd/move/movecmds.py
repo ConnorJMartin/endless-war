@@ -26,6 +26,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
 from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils import yacht as yacht_utils
 try:
     from ew.utils import rutils as rutils
 except:
@@ -66,7 +67,11 @@ async def move(cmd = None, isApt = False, continuousMove = -1):
     if not hasattr(cmd.message.channel, 'name'):
         isDM = True
 
-    if isApt == False and isDM == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if user_data.poi[:5] == 'yacht':
+        response = "You're on the sea, deal with the vessel first. Try !landho to get off it or !board to cross to another boat."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    if isApt == False and isDM == False and ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         channelid = fe_utils.get_channel(cmd.guild, poi_current.channel)
         return await fe_utils.send_message(
             cmd.client,
@@ -546,8 +551,11 @@ async def halt(cmd):
 async def look(cmd):
     user_data = EwUser(member=cmd.message.author)
 
-    poi = poi_static.id_to_poi.get(user_data.poi)
 
+    if user_data.poi[:5] == 'yacht':
+        response = "Quit !looking like a fucking landlubber. It's !avast."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
     market_data = EwMarket(id_server=user_data.id_server)
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
@@ -567,6 +575,17 @@ async def look(cmd):
         for key in poi.keyword_blurbs.keys():
             str_desc = str_desc.replace(key, "**{}**".format(key))
 
+    dock_resp = ""
+    if poi.is_dock:
+        boats = yacht_utils.find_local_boats(poi=poi.id_poi, id_server=user_data.id_server)
+        if len(boats) > 0:
+            names = []
+            for boat in boats:
+                names.append("the **" + boat.yacht_name + "**")
+            temp_resp_dock = "\n\n" + ewutils.formatNiceList(names=names)
+            dock_resp += temp_resp_dock[0].upper() + temp_resp_dock[1:]
+            dock_resp += " {} docked here.".format("is" if len(names) == 1 else "are")
+
 
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid:  # Triggers if you input the command in the void or a sub-zone.
         wikichar = '\n\n<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
@@ -575,6 +594,7 @@ async def look(cmd):
                                                                                                        poi.str_in,
                                                                                                        poi.str_name,
                                                                                                        str_desc,
+                                                                                                       dock_resp,
                                                                                                        wikichar,
                                                                                                        void_resp,
 
@@ -645,7 +665,8 @@ async def look(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "{}{}{}{}{}{}{}{}{}{}".format(
+            "{}\n{}{}{}{}{}{}{}{}{}{}".format(
+                dock_resp,
                 capped_resp,
                 slimes_resp,
                 items_resp,
@@ -672,7 +693,10 @@ async def survey(cmd):
     district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
     market_data = EwMarket(id_server=user_data.id_server)
     poi = poi_static.id_to_poi.get(user_data.poi)
-
+    
+    if user_data.poi[:5] == 'yacht':
+        response = "Quit !looking like a fucking landlubber. It's !avast."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     # if it's a subzone, check who owns the actual district
     if poi.is_subzone:
         controlled_poi = poi_static.id_to_poi.get(poi.mother_districts[0] if len(poi.mother_districts) > 0 else poi.father_district)
@@ -728,7 +752,8 @@ async def scout(cmd):
     user_data = EwUser(member=cmd.message.author)
     user_poi = poi_static.id_to_poi.get(user_data.poi)
 
-    if ewutils.channel_name_is_poi(str(cmd.message.channel)) is False:
+    
+    if ewutils.channel_name_is_poi(str(cmd.message.channel), cmd.message.channel) is False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
     market_data = EwMarket(id_server=cmd.guild.id)
@@ -758,7 +783,8 @@ async def scout(cmd):
         valid_pois = set()
         valid_pois.add(user_data.poi)
         neighbors = []
-        neighbors.extend(poi_static.poi_neighbors.get(user_data.poi))
+        if poi_static.poi_neighbors.get(user_data.poi) is not None:
+            neighbors.extend(poi_static.poi_neighbors.get(user_data.poi))
         if user_poi.is_apartment:
             neighbors.extend(user_poi.mother_districts)
 
@@ -936,7 +962,7 @@ async def teleport(cmd):
     if cmd.tokens[0] == (ewcfg.cmd_prefix + 'blj'):
         blj_used = True
 
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
     time_now = int(time.time())
@@ -1117,6 +1143,7 @@ async def teleport_player_multi(cmd):
 
 
 async def teleport_player(cmd):
+    #todo set up thread support for TPP
     author = cmd.message.author
     user_data = EwUser(member=author)
 
@@ -1383,7 +1410,7 @@ async def flush_streets(cmd):
 
 
 async def loop(cmd):
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
     time_now = int(time.time())

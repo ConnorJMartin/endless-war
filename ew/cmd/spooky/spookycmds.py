@@ -102,7 +102,8 @@ async def revive(cmd, player_auto = None):
             player_data.change_slimes(n=ewcfg.slimes_onrevive)
             # Get the player out of the sewers.
             player_data.poi = ewcfg.poi_id_endlesswar
-
+            if player_data.poi_death == "slipsteinisland":
+                player_data.poi = player_data.poi_death
             # Give newly spawned juvies a foul odour
             player_data.applyStatus(ewcfg.status_repelled_id)
             
@@ -220,7 +221,7 @@ async def haunt(cmd):
             elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
                 # Disallow haunting if the user has haunted too recently.
                 response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt - (time_now - user_data.time_lasthaunt)))
-            elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+            elif ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
                 response = "You can't commit violence from here."
             elif target_poi.pvp == False:
                 # Require the target to be in a PvP area, and flagged if it's a remote haunt
@@ -332,6 +333,8 @@ async def haunt(cmd):
 
                 haunted_channel = poi_static.id_to_poi.get(haunted_data.poi).channel
                 haunt_message = "You feel a cold shiver run down your spine"
+                if user_data.poi[:5] == 'yacht':
+                    haunted_channel = cmd.guild.fetch_channel(channel_id=int(user_data.poi[5:]))
                 if cmd.tokens_count > 2:
                     haunt_message_content = re.sub("<.+>" if cmd.mentions_count == 1 else "\d{17,}", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
                     # Cut down really big messages so discord doesn't crash
@@ -372,7 +375,7 @@ async def inhabit(cmd):
             member = cmd.mentions[0]
             target_data = EwUser(member=member)
 
-            if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+            if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == False:
                 # Has to be done in a gameplay channel
                 response = "You can't disturb the living from here."
             elif cmd.message.channel.name == ewcfg.channel_sewers:

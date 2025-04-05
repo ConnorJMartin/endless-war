@@ -556,6 +556,10 @@ async def create_death_report(cause=None, user_data=None, deathmessage = ""):
     if (cause == ewcfg.cause_debris):  # Response for being hit by poudrin hail
         deathreport = "Your head was smushed in by falling debris. {}".format(ewcfg.emote_slimeskull)
         deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+    if cause == ewcfg.cause_shipsink:
+        deathreport = "You went down with the ship. {}".format(ewcfg.emote_slimeskull)
+        deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
 
     if deathmessage != "":
         deathreport = "{} {}".format(deathmessage, ewcfg.emote_slimeskull)

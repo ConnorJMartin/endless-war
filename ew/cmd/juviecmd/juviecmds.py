@@ -728,7 +728,7 @@ async def scavenge(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
     # Scavenge only in location channels
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == True:
+    if ewutils.channel_name_is_poi(cmd.message.channel.name, cmd.message.channel) == True:
         if user_data.hunger >= user_data.get_hunger_max():
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
         else:
@@ -772,7 +772,7 @@ async def scavenge(cmd):
                 scavenge_yield = district_data.slimes
 
             levelup_response = user_data.change_slimes(n=scavenge_yield, source=ewcfg.source_scavenging)
-            district_data.change_slimes(n=-1 * scavenge_yield, source=ewcfg.source_scavenging)
+            district_data.change_slimes(n=-1 * scavenge_yield, source=ewcfg.source_scavenging, poi_name=user_data.poi)
             if district_data.slimes < 0:
                 district_data.slimes = 0
             district_data.persist()
@@ -907,9 +907,8 @@ async def scrub(cmd):
         if random.randint(0, 2) == 0:
             district.change_capture_points(progress=-1, actor=ewcfg.actor_decay)
             district.persist()
-        if user_data.crime >= 1:
-            user_data.change_crime(n = -1)
-            user_data.persist()
+        user_data.change_crime(n = -1)
+        user_data.persist()
         response = "-"
 
     if response != "-":

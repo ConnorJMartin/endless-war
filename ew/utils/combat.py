@@ -28,6 +28,8 @@ from ..backend.slimeoid import EwSlimeoidBase as EwSlimeoid
 from ..backend.status import EwEnemyStatusEffect
 from ..backend.status import EwStatusEffect
 from ..backend.user import EwUserBase
+from ..backend.yacht import EwYacht
+from ..model.poi import EwPoi
 from ..model.hunting import EwEnemyEffectContainer
 from ..static import cfg as ewcfg
 from ..static import cosmetics as static_cosmetics
@@ -40,8 +42,6 @@ from ..static import poi as poi_static
 from ..static import slimeoid as sl_static
 from ..static import status as se_static
 from ..static import weapons as static_weapons
-
-
 try:
     from .rutils import debug45    
 except:
@@ -388,7 +388,7 @@ class EwEnemy(EwEnemyBase):
 
                     market_data.splattered_slimes += slimes_damage
                     market_data.persist()
-                    district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
+                    district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing, poi_name=target_data.poi)
                     target_data.bleed_storage += slimes_tobleed
                     target_data.change_slimes(n=-slimes_directdamage, source=ewcfg.source_damage)
                     target_data.time_lasthit = int(time_now)
@@ -413,7 +413,7 @@ class EwEnemy(EwEnemyBase):
                         # release bleed storage
                         slimes_todistrict = target_data.slimes
 
-                        district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
+                        district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing, poi_name=target_data.poi)
 
                         # Player was killed. Remove its id from enemies with defender ai.
                         enemy_data.id_target = -1
@@ -639,7 +639,20 @@ class EwEnemy(EwEnemyBase):
                 resp_cont.add_channel_response(old_ch_name, old_district_response)
                 self.identifier = hunt_utils.set_identifier(poi=new_poi, id_server=self.id_server)
 
-
+                 # Different announcements given depending on raidboss tier
+                # gang_base_response=""
+                # if self.enemytype in ewcfg.raid_boss_tiers.get("micro"):
+                #     gang_base_response = "There are reports of a noteworthy enemy roaming around {}.".format(
+                #         new_poi_def.str_name)
+                # elif self.enemytype in ewcfg.raid_boss_tiers.get("monsterous"):
+                #     gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(
+                #         new_poi_def.str_name)
+                # elif self.enemytype in ewcfg.raid_boss_tiers.get("mega"):
+                #     gang_base_response = "There are reports of an extremely powerful enemy roaming around {}.".format(
+                #         new_poi_def.str_name)
+                # else:
+                #     gang_base_response = "Batter down the hatches juvie and gangster alike. There are reports of a exctinction level threat roaming around {}. It's probably best to just wait this one out.".format(
+                #         new_poi_def.str_name)
                 if new_poi not in poi_static.outskirts and self.enemytype in ewcfg.raid_bosses:
                     gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(
                         new_poi_def.str_name)
@@ -885,7 +898,7 @@ def check_defender_targets(user_data, enemy_data):
 """ Damage all players in a district """
 
 
-async def explode(damage = 0, district_data = None, market_data = None):
+async def explode(damage = 0, district_data = None, market_data = None, user_poi = None):
     id_server = district_data.id_server
     poi = district_data.name
 
@@ -898,12 +911,15 @@ async def explode(damage = 0, district_data = None, market_data = None):
     resp_cont = EwResponseContainer(id_server=id_server)
     response = ""
     channel = poi_static.id_to_poi.get(poi).channel
-
+    if user_poi[:5] == 'yacht':
+        channel = server.fetch_channel(channel_id=int(user_poi[5:]))
+    else:
+        channel = poi_static.id_to_poi.get(poi).channel
     life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
-    users = district_data.get_players_in_district(life_states=life_states, pvp_only=True)
+    users = district_data.get_players_in_district(life_states=life_states, pvp_only=True, poi_name=user_poi)
 
     enemies = district_data.get_enemies_in_district()
-
+    
     # damage players
     for user in users:
         user_data = EwUser(id_user=user, id_server=id_server, data_level=1)
@@ -942,7 +958,7 @@ async def explode(damage = 0, district_data = None, market_data = None):
         slimes_damage = slimes_damage_target
         if user_data.slimes < slimes_damage + user_data.bleed_storage:
             # die in the explosion
-            district_data.change_slimes(n=user_data.slimes, source=ewcfg.source_killing)
+            district_data.change_slimes(n=user_data.slimes, source=ewcfg.source_killing, poi_name=user_data.poi)
             district_data.persist()
             slimes_dropped = user_data.totaldamage + user_data.slimes
 
@@ -1128,7 +1144,8 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data, sho
         allies_in_district = district_data.get_players_in_district(
             min_level=math.ceil((1 / 10) ** 0.25 * user_data.slimelevel),
             life_states=[ewcfg.life_state_enlisted],
-            factions=[user_data.faction]
+            factions=[user_data.faction],
+            poi_name=user_data.poi
         )
         if user_data.id_user in allies_in_district:
             allies_in_district.remove(user_data.id_user)
@@ -1147,7 +1164,9 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data, sho
         allies_in_district = district_data.get_players_in_district(
             min_level=math.ceil((1 / 10) ** 0.25 * user_data.slimelevel),
             life_states=[ewcfg.life_state_enlisted],
-            factions=[user_data.faction]
+            factions=[user_data.faction],
+            poi_name=user_data.poi
+            
         )
         if user_data.id_user in allies_in_district:
             allies_in_district.remove(user_data.id_user)
@@ -1834,7 +1853,15 @@ class EwUser(EwUserBase):
         deathreport = await fe_utils.create_death_report(cause=cause, user_data=self, deathmessage = deathmessage)
         resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
+        coords = None
         poi = poi_static.id_to_poi.get(self.poi)
+
+        if poi is None and self.poi[:9] == 'slimesea_':
+            coords = self.poi
+            self.poi = 'slimesea'
+            poi = poi_static.id_to_poi.get('slimesea')
+
+
         if cause == ewcfg.cause_weather:
             resp_cont.add_channel_response(poi.channel, deathreport)
 
@@ -1856,7 +1883,8 @@ class EwUser(EwUserBase):
                     user_has_combustion = True
                     explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
                     explode_district = EwDistrict(district=self.poi, id_server=self.id_server)
-                    explode_poi_channel = poi_static.id_to_poi.get(self.poi).channel
+                    explode_poi_name = poi.id_poi
+                    explode_poi_channel = poi.channel #poi_static.id_to_poi.get(self.poi).channel
 
             # Rigor Mortis
             if ewcfg.mutation_id_rigormortis in mutations:
@@ -1908,15 +1936,18 @@ class EwUser(EwUserBase):
 
                 ids_to_drop = []
                 # Drop some of your items
-                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_item, fraction=item_fraction, rigor=rigor, ambidextrous=ambidextrous))
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_item, fraction=item_fraction, rigor=rigor, ambidextrous=ambidextrous, other_poi=coords))
                 # Drop some of your foods
-                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_food, fraction=food_fraction, rigor=rigor, ambidextrous=ambidextrous))
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_food, fraction=food_fraction, rigor=rigor, ambidextrous=ambidextrous, other_poi=coords))
                 # Drop some of your weapons
-                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_weapon, fraction=1, rigor=rigor, ambidextrous=ambidextrous))
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_weapon, fraction=1, rigor=rigor, ambidextrous=ambidextrous, other_poi=coords))
                 # Drop some of your cosmetics
-                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor, ambidextrous=ambidextrous))
+                ids_to_drop.extend(itm_utils.item_dropsome(id_server=self.id_server, id_user=self.id_user, item_type_filter=ewcfg.it_cosmetic, fraction=cosmetic_fraction, rigor=rigor, ambidextrous=ambidextrous, other_poi=coords))
                 # Drop all of your relics
-                ids_to_drop.extend(itm_utils.die_dropall(user_data=self, item_type=ewcfg.it_relic, kill_method=cause))
+                ids_to_drop.extend(itm_utils.die_dropall(user_data=self, item_type=ewcfg.it_relic, kill_method=cause, other_poi = coords))
+
+                if coords is None:
+                    coords = self.poi
 
                 if len(ids_to_drop) > 0:
                     try:
@@ -1927,7 +1958,8 @@ class EwUser(EwUserBase):
                                 drop_list = drop_list
                             ),
                             (
-                                [self.poi]
+                                
+                                [coords]
                             ))
 
                     except Exception as e:
@@ -1936,7 +1968,7 @@ class EwUser(EwUserBase):
                     item_cache = bknd_core.get_cache(obj_type="EwItem")
                     for id in ids_to_drop:
                         cache_item = item_cache.get_entry(unique_vals={"id_item": id})
-                        cache_item.update({'id_owner': self.poi})
+                        cache_item.update({'id_owner': self.poi if coords is None else coords})
                         item_cache.set_entry(data=cache_item)
 
             self.time_lastdeath = time_now

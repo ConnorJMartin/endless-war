@@ -917,6 +917,20 @@ item_list = [
             "zucker"
         ]
     ),
+    EwGeneralItem(
+        id_item='sextant',
+        str_name="Sextant",
+        str_desc="They measure angles. Teehee.",
+        vendors=[ewcfg.vendor_basedhardware],
+        price=690000
+    ),
+    EwGeneralItem(
+        id_item='treasuremap',
+        str_name="Treasure Map",
+        str_desc = "{mapping}\nLooks like something's hidden out on the Slime Sea. X marks the spot, you know what they say.",
+        price = 15000000,
+        vendors=[ewcfg.vendor_bazaar]
+    ),
     EwSlimeoidFood(
         id_item=ewcfg.item_id_fragilecandy,
         alias=[
@@ -3455,7 +3469,7 @@ furniture_list = [
     ),
     EwFurniture(
         id_furniture = "slimeasaurusskeleton",
-        str_name = "slimesaurus rex skeleton",
+        str_name = "slimeasaurus rex skeleton",
         str_desc = "A full scale model of a Slimeasaurus Rex's skeleton.",
         rarity = "Patrician",
         acquisition = "smelting",
@@ -3637,6 +3651,17 @@ furniture_list = [
         vendors=[ewcfg.vendor_giftshop],
         furniture_place_desc = "You drop the display box down. Now the robbers will know what to go after!",
         furniture_look_desc = "A large display case rests neat the center of the room.",
+        furn_set='collection'
+    ),
+    EwFurniture(
+        id_furniture="treasurechest",
+        str_name="treasure chest",
+        str_desc="You'll have to bust it open to view its contents.",
+        rarity='Plebeian',
+        price=500000,
+        vendors=[ewcfg.vendor_giftshop],
+        furniture_place_desc="You drop the treasure chest, unopened, in your apartment. Banks are for landlubbers. Though you can't shake the feeling your house feels more like an NPC's now.",
+        furniture_look_desc="There's an unopened treasure chest in here.",
         furn_set='collection'
     ),
     EwFurniture(

@@ -29,9 +29,12 @@ except:
     from ..static.rstatic_dummy import relic_list
     from ..static.rstatic_dummy import dontfilter_relics
 
+try:
+    from ew.cmd import debug as ewdebug
+except:
+    from ew.cmd import debug_dummy as ewdebug
 
-def item_dropsome(id_server=None, id_user=None, item_type_filter=None, fraction=None, rigor=False, ambidextrous=False) -> list:
-    """ Return a list of some of a user's non-exempt items to drop. """
+def item_dropsome(id_server=None, id_user=None, item_type_filter=None, fraction=None, rigor=False, ambidextrous=False, other_poi=None) -> list:    
     try:
         user_data = EwUser(id_server=id_server, id_user=id_user)
         items = bknd_item.inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
@@ -44,7 +47,7 @@ def item_dropsome(id_server=None, id_user=None, item_type_filter=None, fraction=
         for item in items:
             item_props = item.get('item_props')
             if item_props.get('context') in ["corpse", "droppable"]:
-                bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item.get('id_item'))
+                bknd_item.give_item(id_user=user_data.poi if other_poi is None else other_poi, id_server=id_server, id_item=item.get('id_item'))
             if not item.get('soulbound') and not (rigor and item_props.get('preserved') == user_data.id_user) and item_props.get('context') != 'gellphone' and item_props.get('id_item') != 'gameguide':
                 drop_candidates.append(item)
 
@@ -92,7 +95,7 @@ def item_dropsome(id_server=None, id_user=None, item_type_filter=None, fraction=
         return []
 
 
-def die_dropall(user_data, item_type, kill_method='') -> list:
+def die_dropall(user_data, item_type, kill_method='', other_poi = None) -> list:
     """ Return a list of all of a user's non-exempt items to drop. """
     end_list = []
     if item_type != '':
@@ -769,7 +772,25 @@ def item_drop(
     except Exception as e:
         ewutils.logMsg("Failed to drop item {}: {}".format(id_item, e))
 
-
+def move_slime_sea(
+  id_server = None
+):
+    seainv = bknd_item.inventory(
+        id_user='slimesea',
+        id_server=id_server
+    )
+    for drop in seainv:
+        x = 0
+        y = 0
+        while ewdebug.seamap[y][x] != -1:
+            x = random.randrange(0, ewdebug.max_right_bound)
+            y = random.randrange(0, ewdebug.max_lower_bound)
+        try:
+            item_obj = EwItem(id_item=drop.get('id_item'))
+            item_obj.id_owner = "{}_{}_{}".format(ewcfg.poi_id_slimesea, x, y)
+            item_obj.persist()
+        except Exception as E:
+            ewutils.logMsg("Failed to move item out of the main sea pool. {}".format(E))
 
 def cull_slime_sea(
         id_server = None
@@ -866,10 +887,7 @@ async def move_relics(id_server):
 
     for relic in relic_stash:
         relic_item = EwItem(id_item=relic.get('id_user'))
-        if relic_item.id_owner == 'slimesea' and relic_item.template not in dontfilter_relics:
-            relic_item.id_owner = random.choice(static_poi.capturable_districts)
-            relic_item.persist()
-            continue
+
 
         owner_condensed = relic_item.id_owner.replace('decorate', '').replace('fridge', '').replace('closet', '').replace('bookshelf', '')
         if 'collection' in owner_condensed or 'stand' in owner_condensed:
