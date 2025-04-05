@@ -953,11 +953,11 @@ async def item_use(cmd):
                     response = "You need to wait a bit longer before applying more body spray."
                 else:
                     if context == 'repel':
-                        response = user_data.applyStatus(ewcfg.status_repelled_id)
+                        response = user_data.applyStatus(ewcfg.status_perfume_id)
                     elif context == 'superrepel':
-                        response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=2)
+                        response = user_data.applyStatus(ewcfg.status_perfume_id, multiplier=2)
                     elif context == 'maxrepel':
-                        response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
+                        response = user_data.applyStatus(ewcfg.status_perfume_id, multiplier=4)
                     bknd_item.item_delete(item.id_item)
             elif context == 'pheromones':
                 response = user_data.applyStatus(ewcfg.status_pheromones_id)

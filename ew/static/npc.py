@@ -786,6 +786,30 @@ EwNpc(
     starting_statuses = ['6leveltrainer', ewcfg.status_enemy_trainer_id],
     is_threat=False
 ),
+EwNpc(
+    id_npc = "slimewick",
+    active = True,
+    str_name = "Slime Wick",
+    description = "Your shits wrecked.",
+    poi_list = poi_static.battle_royale_island,
+    dialogue = {"loop":["I boogie with my feet then I boogie with my hands."],
+                "hit":["Killing me? You must be mistaken because it's your slime that I will be taking.", "*Slime Wick instantly builds a staircase to build limit.*"],
+                "die":["I'm going back... to the lobby. *dies*", "I guess this is one victory... I couldn't royale. *dies*"],
+                },
+    func_ai = npcutils.condition_hostile_action,
+    defaultslime = 20000000,
+    defaultlevel = 99,
+    rarity=3,
+    is_threat=True,
+    attacktype = ewcfg.weapon_id_scar,
+    rewards = [
+    {
+     ewcfg.weapon_id_scar:[100, 1, 1] # 50 or 20%
+    }
+    ],
+    # Slime Wick doesn't care for weaklings
+    condition = lambda user_data: True if user_data.slimes > 100000 else False
+),
 ]
 
 for npc in npc_list:

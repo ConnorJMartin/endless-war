@@ -3325,7 +3325,7 @@ weapon_id_combatknife = 'combatknife'
 weapon_id_machete = 'machete'
 weapon_id_boomerang = 'boomerang'
 weapon_id_basket = 'basket'
-
+weapon_id_scar = 'scar'
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
@@ -3930,6 +3930,7 @@ status_ghostbust_id = "ghostbust"
 status_busted_id = "busted"
 status_stunned_id = "stunned"
 status_repelled_id = "repelled"
+status_perfume_id = "perfumed"
 status_repelaftereffects_id = "repelaftereffects"
 status_evasive_id = "evasive"
 status_taunted_id = "taunted"
@@ -4507,8 +4508,10 @@ enemy_type_mammoslimebull = 'mammoslimebull'
 enemy_type_slimeofgreed = 'slimeofgreed'
 enemy_type_microgullswarm = 'microgullswarm'
 enemy_type_policeofficer = 'policeofficer'
-# Raid bosses
 enemy_type_megaslime = 'megaslime'
+# Raid bosses
+
+enemy_type_gigaslime = 'gigaslime'
 
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
@@ -4571,8 +4574,8 @@ common_enemies = []
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime, enemy_type_spacecarp]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammoslimebull, enemy_type_microgullswarm]
-raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
-enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
+raid_bosses = [enemy_type_gigaslime,enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
+enemy_movers = [enemy_type_gigaslime,enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 defense_up_enemies = [enemy_type_mutatedbarrel, enemy_type_alm]
 raid_den_bosses = [enemy_type_alm]
 
@@ -4602,6 +4605,7 @@ raid_boss_tiers = {
     "micro": [enemy_type_megaslime, enemy_type_slimernaliajuvie],
     "monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator, enemy_type_miserablemiser],
     "mega": [enemy_type_greeneyesslimedragon, enemy_type_titanoslime, enemy_type_slimernaliagangster],
+    "giga": [enemy_type_gigaslime]
     # This can be left empty until we get more raid boss ideas.
     # "nega": [],
 }
@@ -5030,6 +5034,19 @@ enemy_data_table = {
         "dhvariant": "Grave Megaslime",
         "description": "\n\n> {emote} An especially large being made entirely of slime. These things have been around for as long as I can remember. Somehow, due to slime's unique life-bringing effect, when enough of it is gathered together it will begin to animate on its own. There seems to only be one thing on its mind once it is brought to life; demolish everything in its immediate vicinity.\n - *The Venator's Encyclopedia*, The Venator\n - https://cdn.discordapp.com/attachments/667820533454340112/745004684627935242/The_Venators_Encyclopedia16.png".format(emote=emote_megaslime),
         "raredescription": "\n\n> {emote} A massive, genetically mutated being made entirely of slime. They all seem determined to head directly towards the city, first thing. They only started showing up recently, but as soon as they did, the regular Megaslimes started to mimic their behavior. Perhaps it is a sort of hivemind they share?\n - *The Venator's Encyclopedia*, The Venator\n - https://cdn.discordapp.com/attachments/667820533454340112/745004708019568640/The_Venators_Encyclopedia17.png".format(emote=emote_megaslime),
+        # "arcticdescription": "\n\n> \n - *MT. SRXEK GUIDEBOOK*, Author Unknown",
+    },
+    enemy_type_gigaslime: {
+        "slimerange": [100000000, 100000000],
+        "ai": enemy_ai_attacker_a,
+        "attacktype": enemy_attacktype_gunkshot,
+        "displayname": "Gigaslime",
+        "raredisplayname": "Gangerous Gigaslime",
+        "aliases": ["giga"],
+        "arcticvariant":"Glacial Gigaslime",
+        "dhvariant": "Ghastly Gigaslime",
+        "description": "\n\n> {emote} A nightmarishly huge abomination made entirely of slime, and lots of it. How such a huge amount of slime ammased to begin with is anyones guess but it is likely a vestige of the ye olde slimecorp stock exchange.".format(emote=emote_megaslime),
+        "raredescription": "\n\n> {emote} A nightmarishly huge abomination made entirely of slime, and lots of it. How such a huge amount of slime ammased to begin with is anyones guess but it is likely a vestige of the ye olde slimecorp stock exchange.".format(emote=emote_megaslime),
         # "arcticdescription": "\n\n> \n - *MT. SRXEK GUIDEBOOK*, Author Unknown",
     },
     enemy_type_slimeasaurusrex: {

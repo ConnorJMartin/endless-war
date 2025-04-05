@@ -765,6 +765,10 @@ diamondpickaxekilltext = [
     "{name_player} quickly enchants their diamond pick with Silk Touch! They effortlessly punch it through {name_target}'s chest, cleanly extracting their still-beating heart to be later thrown into a furnace. {emote_skull}"
 ]
 
+scarkilltext = [
+    "{name_player} sprays a decisive torrent of bullets into {name_target}. As {name_target} dies {name_player} hits them with a dance, they boogie with their feet then they boogie with their hands. {emote_skull}",
+    "**BLAM BLAM BLAM!** {name_player} builds a ramp into the skybox and unloads an entire rifle magazine into {name_target} on the descent. Now they're in the lobby wondering who shot them. {emote_skull}",
+]
 
 graffiti = [
     "https://media.discordapp.net/attachments/431605021852041237/1068223499161845780/graffiti.png?width=984&height=657",

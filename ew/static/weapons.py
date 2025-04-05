@@ -1995,6 +1995,34 @@ weapon_list = [
         stat=ewcfg.stat_basket_kills,
         str_brandish=["{name} tries to eat a piece of \"food\" from {weapon}. Numerous teeth are chipped or missing."],
     ),
+    EwWeapon(  # 55
+        id_weapon=ewcfg.weapon_id_scar,
+        alias=[
+            "goldenscar",
+            "scar",
+            "goldenrifle"
+        ],
+        str_crit="**Boom headshot!** You unload an entire magazine into the target!!",
+        str_miss="**You missed!** Not one of your bullets connected!!",
+        str_equip="You equip the Golden Scar.",
+        str_name="golden scar",
+        str_weapon="an golden scar",
+        str_weaponmaster_self="You are a rank {rank} {title} of the Golden Scar.",
+        str_weaponmaster="They are a rank {rank} {title} of the Golden Scar.",
+        str_kill=comm_cfg.scarkilltext,
+        str_killdescriptor="smelling mad musty",
+        str_damage="Bullets rake over {name_target}'s {hitzone}!!",
+        str_duel="**RAT-TAT-TAT-TAT-TAT!!** {name_player} and {name_target} practice shooting at distant targets with quick, controlled bursts.",
+        str_description="A traditional FN Scar plated with gold. Pried from the cold dead hands of a legendary warrior. Sports a higher clip size and better firepower compared to a regular assault rifle.",
+        str_reload="You hastily rip the spent magazine out of your assault rifle, before slamming a fresh one back into it.",
+        str_reload_warning="**RAT-TAT-TAT--** *ttrrr...* **SHIT!!** {name_player}’s rifle just chewed up the last of its magazine; it’s out of bullets!!",
+        str_scalp=" It has a shit-load of holes in it.",
+        fn_effect=get_normal_attack(cost_multiplier=0.7, damage_multiplier=0.5, weapon_type='burst_fire'),
+        clip_size=30,
+        classes=[ewcfg.weapon_class_ammo],
+        stat=ewcfg.stat_rifle_kills,
+        str_brandish=["{name} equips {weapon}. It gleans in the sun."]
+    ),
 ]
 
 for weapon in weapon_list:

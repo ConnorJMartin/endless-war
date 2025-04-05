@@ -508,6 +508,15 @@ enemy_attack_type_list = [
         str_damage="{name_target} is socked right in the {hitzone}!!",
         fn_effect=atf_gunkshot
     ),
+    EwAttackType(  # 33
+        id_type=ewcfg.weapon_id_scar,
+        str_crit="**Boom headshot!** {name_enemy} unloads an entire magazine into {name_target}.",
+        str_miss="**MISS!** {name_enemy} missed!** Not one of {name_enemy}'s bullets connected!!",
+        str_kill="**BLAM BLAM BLAM!** {name_enemy} builds a ramp into the skybox and unloads an entire rifle magazine into {name_target} on the descent. Now they're in the lobby wondering who shot them. {emote_skull}",
+        str_killdescriptor="smelling mad musty",
+        str_damage="Bullets rake over {name_target}'s {hitzone}!!",
+        fn_effect=atf_talons
+    ),
 ]
 
 

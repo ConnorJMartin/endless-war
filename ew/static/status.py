@@ -73,6 +73,13 @@ status_effect_list = [
         str_describe_self='You smell like shit, much to the displeasure of slime beasts.'
     ),
     EwStatusEffectDef(
+        id_status=ewcfg.status_perfume_id,
+        time_expire=ewcfg.time_expire_repel_base,
+        str_acquire="You spray yourself with the FUCK ENERGY Body Spray... the smell seems less potent then it used to.",
+        str_describe="They smell pretty bad but not THAT bad.",
+        str_describe_self="You smell pretty bad but not THAT bad."
+    ),
+    EwStatusEffectDef(
         id_status=ewcfg.status_repelaftereffects_id,
         time_expire=2,
         str_acquire='You try and shake off the foul smell, but its stench still lingers, if only for a brief moment.',
@@ -846,7 +853,13 @@ trauma_list = [
         str_trauma_self = "You have several long cut scars across your body.",
         str_trauma = "They have several long cut scars across their body.",
         trauma_class=ewcfg.trauma_class_sapregeneration
-    )
+    ),
+    EwTrauma(  # 24
+        id_trauma=ewcfg.weapon_id_scar,
+        str_trauma_self="Your torso is riddled with scarred-over bulletholes.",
+        str_trauma="Their torso is riddled with scarred-over bulletholes.",
+        trauma_class=ewcfg.trauma_class_bleeding,
+    ),
 ]
 
 trauma_map = {}

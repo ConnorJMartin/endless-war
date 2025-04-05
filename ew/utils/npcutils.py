@@ -70,7 +70,7 @@ async def chatty_npc_action(keyword = '', enemy = None, channel = None, item = N
 
 async def police_npc_action(keyword = '', enemy = None, channel = None, item = None, user_data = None): #similar to the generic npc, but with loopable dialogue
     npc_obj = static_npc.active_npcs_map.get(enemy.enemyclass)
-    undo_capture(enemy)
+    await undo_capture(enemy)
     if keyword == 'act':
         return await conditional_act(channel=channel, npc_obj=npc_obj, enemy=enemy)
     elif keyword == 'die':
@@ -83,7 +83,7 @@ async def police_npc_action(keyword = '', enemy = None, channel = None, item = N
 async def police_chief_npc_action(keyword = '', enemy = None, channel = None, item = None, user_data = None):
     npc_obj = static_npc.active_npcs_map.get(enemy.enemyclass)
     #run the police set of actions, except for on death
-    undo_capture(enemy)
+    await undo_capture(enemy)
     if keyword == 'die':
         return await chief_die(channel=channel, npc_obj=npc_obj, keyword_override='die', enemy = enemy)
     else:

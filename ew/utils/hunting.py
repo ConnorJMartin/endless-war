@@ -114,7 +114,7 @@ def spawn_enemy(
         elif threat_level_choice <= 900:
             threat_level = "mega"
         else:
-            threat_level = "mega"
+            threat_level = "giga"
         # threat_level = "nega"
 
         boss_choices = ewcfg.raid_boss_tiers[threat_level]
