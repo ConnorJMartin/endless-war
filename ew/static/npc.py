@@ -355,7 +355,7 @@ EwNpc(
     id_npc = "chad",
     active = True,
     str_name = "Chad", # Full name "Alpha Chad"
-    poi_list = [ewcfg.poi_id_krakbay, ewcfg.poi_id_poudrinalley, ewcfg.poi_id_cratersville],
+    poi_list = [ewcfg.poi_id_copkilltown,ewcfg.poi_id_krakbay, ewcfg.poi_id_poudrinalley, ewcfg.poi_id_cratersville],
     dialogue = {"talk":["Look alive there, pal!", "We're all gonna make it, or so I've been told."],
                 "hit":["Well, looks like things are going that way.", "Let's do this."],
                 "die":["Back to the sauce I go..."],
@@ -378,7 +378,7 @@ EwNpc(
     id_npc = "tips",
     active = True,
     str_name = "Tips", # Full name "Tips Fedora"
-    poi_list = [ewcfg.poi_id_toxington, ewcfg.poi_id_gatlingsdale, ewcfg.poi_id_maimridge],
+    poi_list = [ewcfg.poi_id_copkilltown,ewcfg.poi_id_toxington, ewcfg.poi_id_gatlingsdale, ewcfg.poi_id_maimridge],
     dialogue = {"talk":["Nothing like a nice, long smoke on a big tall building, or walking around town, or sitting at home staring at your ceiling, or... Wait, what was I talking about again?"],
                 "hit":["Heh, you're gonna regret this. I'm a master of the blade."],
                 "die":["T-There was spaghetti in my controller..."],
@@ -786,6 +786,119 @@ EwNpc(
     starting_statuses = ['6leveltrainer', ewcfg.status_enemy_trainer_id],
     is_threat=False
 ),
+
+
+EwNpc(
+    id_npc = "robynbanks",
+    active = True,
+    str_name = "Robyn Banks",
+    description = "A Lone Wolf Killer hoping to make it big. She can be seen wandering around capping, vaping and dabbing.",
+    poi_list = [poi_static.capturable_districts.append(ewcfg.poi_id_copkilltown)],
+    dialogue = {"talk":["Sup.", "Wanna puff?","You see any bustahs around here?", "My favourite flavour has got to be killer cotton candy.", "Who the fuck is Ben Saint???", "Thalamus Dredge."],
+                "loop":["Gotta get more vape pods...", "!dab", "*Takes a long puff of her vape*"],
+                "hit":["Oh no you don't.", "You just made a mistake!","Oh it's on."],
+                "die":["...Bustah {}".format(ewcfg.emote_slimeskull)]
+                },
+    func_ai = npcutils.condition_hostile_action,
+    image_profile = "https://file.garden/Zqi4XgvJG2OU4NGu/RFCK/killernpctest.png",
+    defaultslime = 2000000,
+    defaultlevel = 37,
+    is_threat=True,
+    rewards = [
+
+        {
+        ewcfg.item_id_slimepoudrin: [100, 1, 1],
+        ewcfg.item_id_slimepoudrin: [50, 1, 4],
+        ewcfg.item_id_spent_pod: [100, 5,15],
+        ewcfg.item_id_cop_killer_cotton_candy_pod: [100, 1,5]
+        }
+    ],
+    condition= lambda user_data, enemy_data: True if (user_data.faction == 'rowdys' and user_data.life_state == ewcfg.life_state_enlisted) and user_data.slimes > enemy_data.get_slimes() *0.20 else False 
+),
+EwNpc(
+    id_npc = "countthrashula",
+    active = True,
+    str_name = "Count Thrashula",
+    description = 'Rowdy',
+    #TODO: A more select group of districts
+    poi_list = [poi_static.capturable_districts.append(ewcfg.poi_id_rowdyroughhouse)],
+    dialogue = {"talk":["1 !thrash Ah Ah Ah"],
+                "loop":["The number of the day is !thrash."],
+                "hit":["Oh no you don't."],
+                "die":["Ah Ah Ah... {}".format(ewcfg.emote_slimeskull)]
+                },
+    func_ai = npcutils.condition_hostile_action,
+    image_profile = "https://file.garden/Zqi4XgvJG2OU4NGu/RFCK/killernpctest.png",
+    defaultslime = 2000000,
+    defaultlevel = 37,
+    is_threat=True,
+    rewards = [
+
+        {
+        ewcfg.item_id_slimepoudrin: [100, 1, 1],
+        ewcfg.item_id_slimepoudrin: [50, 1, 4],
+        ewcfg.item_id_spent_pod: [100, 5,15],
+        ewcfg.item_id_cop_killer_cotton_candy_pod: [100, 1,5]
+        }
+    ],
+    condition= lambda user_data, enemy_data: True if (user_data.faction == 'rowdys' and user_data.life_state == ewcfg.life_state_enlisted) and user_data.slimes > enemy_data.get_slimes() *0.20 else False 
+),
+EwNpc(
+    id_npc = "undercovercop",
+    active = True,
+    str_name = "Undercover Cop",
+    description = "Some kind of undercover cop. Not a particularly good one considering he openly advertises that he is in fact a cop but you gotta respect the hustle in the face of extreme mental adversity.",
+    poi_list = poi_static.capturable_districts,
+    dialogue = {
+                "loop":["""🚨 THIS IS THE POLICE 🚨\n
+🚔 ✋🏿 HANDS UP 🤚🏿 🚔\n
+🔫 YOU ARE ALL UNDER ARREST FOR ILLEGAL POSSESSION OF SLIME AND MULTIPLE OTHER CHARGES 🔫\n
+🚨
+https://discord.com/channels/431237299137675295/431237299137675297/436404634131628032
+"""],
+                "hit":["🚔 ✋🏿 HANDS UP 🤚🏿 🚔"],
+                "die":["🚨 THIS IS THE... *cough cough splurt* POLICE 🚨"],
+                },
+    func_ai = npcutils.police_npc_action,
+    image_profile = "https://file.garden/Zqi4XgvJG2OU4NGu/RFCK/undercovercoppfp.png",
+    defaultslime = 6911000,
+    defaultlevel = 40,
+    rarity=7,
+    rewards = [
+    {
+     "officercopbadge":[20, 1, 1]}
+    ],
+    attacktype = 'police',
+    condition = lambda user_data, enemy_data: True if user_data.crime > 10000 or ewcfg.status_enemy_hostile_id in enemy_data.getStatusEffects() else False,
+    is_threat=True
+    #if the cop is trigger happy or if you're above a certain crime level
+),
+
+# Defeat Dr Evil to get slime myers mojo, trade mojo to slime myers for ???
+EwNpc(
+    id_npc = "austinpowers",
+    active = True,
+    str_name = "Slime Myers",
+    description = "A flamboyant gentleman in a purple suit. He appears to have lost something.",
+    poi_list = ["shagrocks"], 
+    dialogue = {
+                "talk":["Have you seen my mojo?"],
+                "loop":["I boogie with my feet then I boogie with my hands."],
+                "hit":["Killing me? You must be mistaken because it's your slime that I will be taking.", "*Slime Wick instantly builds a staircase to build limit.*"],
+                "die":["I lost my... mojo *dies*"],
+                },
+    func_ai = npcutils.generic_npc_action,
+    image_profile="https://file.garden/Zqi4XgvJG2OU4NGu/RFCK/slimestinpowers.png",
+    defaultslime = 1000000,
+    defaultlevel = 69,
+    rarity=3,
+
+    attacktype = ewcfg.weapon_id_scar,
+    starting_statuses=[ewcfg.status_enemy_barren_id]
+),
+
+
+#Athena
 EwNpc(
     id_npc = "slimewick",
     active = True,
@@ -797,7 +910,7 @@ EwNpc(
                 "die":["I'm going back... to the lobby. *dies*", "I guess this is one victory... I couldn't royale. *dies*"],
                 },
     func_ai = npcutils.condition_hostile_action,
-    defaultslime = 20000000,
+    defaultslime = 10000000,
     defaultlevel = 99,
     rarity=3,
     is_threat=True,
@@ -805,11 +918,66 @@ EwNpc(
     rewards = [
     {
      ewcfg.weapon_id_scar:[100, 1, 1] # 50 or 20%
-    }
-    ],
-    # Slime Wick doesn't care for weaklings
-    condition = lambda user_data: True if user_data.slimes > 100000 else False
+    }],
+    # Only attacks players with at least 20% of his slime
+    condition = lambda user_data, enemy_data: True if user_data.slimes > enemy_data.get_slimes() *0.20 else False
 ),
+
+#Boss npcs
+EwNpc(
+    id_npc = "slimecorpbot",
+    active = True,
+    str_name = "Slimecorp Scouting and Reconnaissance Unit",
+    description = "A wandering slimecorp bot, perhaps a relic from before the fall of Slimecorp, still surveying the lands beyond the city. Don't be fooled by its designation, in order to stop gangsters smashing them to pieces to salvage their proprietary Slimecorp CPUs they are as equipped as any good war machine would be.",
+    #Actual location will be the outer islands
+    poi_list = [poi_static.capturable_districts.append(ewcfg.poi_id_rowdyroughhouse)],
+    dialogue = {"talk":["Greetings citizen.", "Follow he who turns the wheels.", "I am unit *bzzz-*, please proceed.", "Move along."],
+                "loop":["Scanning... scanning... scanning...", "Preparing to sample...", "Insufficient data...", "Signal Recieved!", "*chirps*", "*beeps*"],
+                "rareloop":["Backing up blackbox data to slimecorp.net"],
+                "hit":["Hostilities detected, preparing counteroffense..", "Damage recieved, counterattacking."],
+                "die":["Critical damage taken... {}".format(ewcfg.emote_slimeskull), "Directives... cannot be... completed. {}".format(ewcfg.emote_slimeskull)]
+                },
+    func_ai = npcutils.generic_npc_action,
+    image_profile = "https://file.garden/Zqi4XgvJG2OU4NGu/RFCK/slimecorpbot.png",
+    defaultslime = 15000000,
+    defaultlevel = 66,
+    is_threat=True,
+    rewards = [
+
+        {
+        ewcfg.item_id_slimepoudrin: [100, 1, 1],
+        ewcfg.item_id_slimepoudrin: [20, 1, 5],
+        ewcfg.item_id_slimecorpcpu: [50,1,1],
+
+        }
+    ],
+),
+#Placeholder until the Chess in the Charcoal Park update
+EwNpc(
+    id_npc = "magnuscarlslime",
+    active = False,
+    str_name = "Magnus Carlslime",
+    description = "Chess man.",
+    poi_list = [ewcfg.poi_id_charcoalpark],
+    dialogue = {
+                "talk":["Chess"],
+                "loop":["Chess."],
+                "hit":["Chess"],
+                "die":["Chess"],
+                },
+    func_ai = npcutils.generic_npc_action,
+    image_profile="https://file.garden/Zqi4XgvJG2OU4NGu/RFCK/magnuscarlslime.png",
+    defaultslime = 10000,
+    defaultlevel = 69,
+    rarity=3,
+    rewards = [
+    {
+     ewcfg.item_id_magnuscarlslimesoul:[100, 1, 1]}
+    ],
+    attacktype = ewcfg.weapon_id_scar,
+    starting_statuses=[] #Invulnerable until beaten at chess
+),
+
 ]
 
 for npc in npc_list:

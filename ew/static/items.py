@@ -508,12 +508,7 @@ item_list = [
         ingredients="generic",
         context=10,
     ),
-    EwGeneralItem(
-        id_item=ewcfg.item_id_dragonsoul,
-        str_name="Dragon Soul",
-        str_desc="A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
-        context='dragon soul',
-    ),
+
     EwGeneralItem(
         id_item=ewcfg.item_id_monsterbones,
         str_name="Monster Bones",
@@ -2024,6 +2019,43 @@ EwGeneralItem(
         price=15000,
         vendors=[ewcfg.vendor_bazaar],
     ),
+    EwGeneralItem(
+        id_item="mojo",
+        alias=[
+            "mojo"
+        ],
+        str_name="Mojo",
+        str_desc="A glass tube filled with an odd looking red liquid.",
+    ),
+    #Boss Souls
+    EwGeneralItem(
+        id_item=ewcfg.item_id_dragonsoul,
+        str_name="Dragon Soul",
+        str_desc="A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
+        context='dragon soul',
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_slimecorpcpu,
+        alias=[
+            "cpu"
+        ],
+        str_name="Slimecorp CPU",
+        str_desc="A proprietary Slimecorp CPU, miraculously unscathed by whatever wreck it was scavenged from. A priceless artifact in these postlapsarian times, it could probably be used to !smelt some pretty powerful tools.",
+        # Does nothing right now, eventually I want it to smelt the Autohotkey, an automining pickaxe
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_magnuscarlslimesoul,
+        alias=[
+            "chesssoul",
+            "magnussoul"
+        ],
+        str_name="Magnus Carlslime's Soul",
+        str_desc="Soul of Magnus Carlslime",
+    ),
+    
+
+
+
 ]
 # item_list += ewdebug.debugitem_set
 

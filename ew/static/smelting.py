@@ -398,6 +398,22 @@ smelting_recipe_list = [
         },
         products=[ewcfg.weapon_id_dclaw]
     ),
+    EwSmeltingRecipe(
+        id_recipe="ahk",
+        str_name="The Auto Hot Key",
+        alias=[
+            "autohotkey",
+            "hotkey",
+            "bot",
+        ],
+        ingredients={
+            ewcfg.item_id_slimecorpcpu: 1,
+            ewcfg.weapon_id_pickaxe: 1,
+            ewcfg.item_id_slimepoudrin:10,
+            ewcfg.item_id_ironingot: 5,
+        },
+        products=[ewcfg.weapon_id_autohotkey]
+    ),
         EwSmeltingRecipe(
         id_recipe="monowhip",
         str_name="a monofilamentwhip",

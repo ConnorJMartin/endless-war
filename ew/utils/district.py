@@ -246,7 +246,8 @@ class EwDistrict(EwDistrictBase):
         if self.capture_points <= 0:
             if self.controlling_faction != "":  # if it was owned by a faction
 
-                message = "The {faction} have lost control over {district} because of sheer negligence.".format(
+                #message = "The {faction} have lost control over {district} because of sheer negligence.".format(
+                message = "NLACakaNM's finest have seized {district} from the {faction}.".format(
                     faction=self.controlling_faction,
                     district=poi_static.id_to_poi[self.name].str_name
                 )

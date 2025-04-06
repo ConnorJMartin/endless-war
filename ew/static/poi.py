@@ -3430,21 +3430,20 @@ EwPoi(
         is_dock=True
     ),
 EwPoi(
-        id_poi="shagrocksisland",
-        alias=['shagrocksisland'],
-        str_name="Shag Rock Island",
-        str_desc="A lonesome pier at the very end of the Slime's End peninsula, stretching out into the Slime Sea. From here, you're able to clearly make out Downtown in the distance, pumping light pollution into the normally polluted air. You're itching to get back there and punch some grandmas once you're done wringing slime out of fish.\n\nExits into Slime's End.",
-        channel="shag-rock-island",
-        role="Calf Island Pier",
+        id_poi="shagrocks",
+        alias=['shagrocks'],
+        str_name="Shag Rocks",
+        str_desc="A desolate collection of barren rocks. Not much happens on the shag rocks besides shipwreckss but every now and then, when the wind is calm and the tide is low a strange man can be seen, trying to find his mojo.",
+        channel="shag-rocks",
+        role="Shag Rocks",
         coord =  [[47, 15], [46, 16]],
-        permissions={'shagrocksisland': ['read', 'send', 'connect']},
+        permissions={'shagrocks': ['read', 'send', 'connect']},
         pvp=True,
-        is_subzone=False,
-        mother_districts=[],
-        is_pier=False,
+        is_pier=True,
         pier_type="saltwater",
         is_dock=True
 )
+
 ]
 
 

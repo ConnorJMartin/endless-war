@@ -908,6 +908,39 @@ weapon_list = [
         is_tool=1,
         str_brandish=["{name} starts ramming {weapon} into the ground, whistling a little tune as they work!"]
     ),
+    EwWeapon(  # 18
+        id_weapon=ewcfg.weapon_id_autohotkey,
+        alias=[
+            "ahk",
+            "autohotkey",
+            "auto",
+            "botting",
+            "bot",
+            "auto hot key"
+        ],
+        str_crit="**Critical hit!!** By sheer dumb luck, {name_player} manages to get a good hit off on {name_target}’s {hitzone}.",
+        str_miss="**MISS!!** {name_player} is too weak to lift their pickaxe!",
+        str_equip="You equip the pickaxe.",
+        str_name="pickaxe",
+        str_weapon="a pickaxe",
+        str_weaponmaster_self="You are a rank {rank} {title} coward of the pickaxe.",
+        str_weaponmaster="They are a rank {rank} {title} coward of the pickaxe.",
+        # str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
+        # str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
+        str_kill=comm_cfg.pickaxekilltext,
+        str_killdescriptor="!mined",
+        str_damage="{name_target} is lightly tapped on the {hitzone}!!",
+        str_duel="**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
+        str_scalp=" It reeks of dirt and poudrins. How embarrassing!",
+        fn_effect=get_normal_attack(weapon_type='tool'),
+        str_description="A highly advanced AI powered pickaxe forged from the most advanced slimecorp technology. Even staring at it you can just feel your arm start to move on its own",
+        acquisition=ewcfg.acquisition_smelting,
+        stat=ewcfg.stat_pickaxe_kills,
+        is_tool=1,
+        str_brandish=["{name} pulls out {weapon}. Almost immedietly their arm begins moving automatically."]
+    ), 
+    
+    
     EwWeapon(  # 19
         id_weapon=ewcfg.weapon_id_fishingrod,
         alias=[
